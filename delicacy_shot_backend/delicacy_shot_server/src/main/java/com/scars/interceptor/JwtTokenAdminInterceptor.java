@@ -1,6 +1,7 @@
 package com.scars.interceptor;
 
 import com.scars.constant.JwtClaimsConstant;
+import com.scars.context.BaseContext;
 import com.scars.properties.JwtProperties;
 import com.scars.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -47,6 +48,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
             log.info("当前员工id：", empId);
+            BaseContext.setCurrentId(empId);    // 存储登录的员工id到线程中
             //3、通过，放行
             return true;
         } catch (Exception ex) {

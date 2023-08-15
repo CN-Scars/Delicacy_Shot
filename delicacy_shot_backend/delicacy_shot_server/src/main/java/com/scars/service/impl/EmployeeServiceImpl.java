@@ -3,6 +3,7 @@ package com.scars.service.impl;
 import com.scars.constant.MessageConstant;
 import com.scars.constant.PasswordConstant;
 import com.scars.constant.StatusConstant;
+import com.scars.context.BaseContext;
 import com.scars.dto.EmployeeDTO;
 import com.scars.dto.EmployeeLoginDTO;
 import com.scars.entity.Employee;
@@ -78,9 +79,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(LocalDateTime.now());
 
         // 设置当前记录创建人ID和修改人ID
-        // TODO 后期需要更改为当前用户登录的ID
-        employee.setCreateUser(10L);
-        employee.setUpdateUser(10L);
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
     }
