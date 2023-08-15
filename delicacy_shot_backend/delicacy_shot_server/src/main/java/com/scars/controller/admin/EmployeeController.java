@@ -1,6 +1,7 @@
 package com.scars.controller.admin;
 
 import com.scars.constant.JwtClaimsConstant;
+import com.scars.dto.EmployeeDTO;
 import com.scars.dto.EmployeeLoginDTO;
 import com.scars.entity.Employee;
 import com.scars.properties.JwtProperties;
@@ -68,4 +69,11 @@ public class EmployeeController {
         return Result.success();
     }
 
+    @PostMapping
+    @ApiOperation("新增员工")
+    public Result save(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("新增了员工{}", employeeDTO);
+        employeeService.save(employeeDTO);
+        return Result.success();
+    }
 }

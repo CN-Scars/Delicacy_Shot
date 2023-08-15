@@ -1,7 +1,9 @@
 package com.scars.service.impl;
 
 import com.scars.constant.MessageConstant;
+import com.scars.constant.PasswordConstant;
 import com.scars.constant.StatusConstant;
+import com.scars.dto.EmployeeDTO;
 import com.scars.dto.EmployeeLoginDTO;
 import com.scars.entity.Employee;
 import com.scars.exception.AccountLockedException;
@@ -10,9 +12,12 @@ import com.scars.exception.PasswordErrorException;
 import com.scars.mapper.EmployeeMapper;
 import com.scars.service.EmployeeService;
 import org.apache.commons.codec.cli.Digest;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -54,6 +59,30 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //3、返回实体对象
         return employee;
+    }
+
+    /**
+     * 新增员工
+     * @param employeeDTO
+     */
+    public void save(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+
+        // 对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        // 补全属性
+        employee.setStatus(StatusConstant.ENABLE);
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        // 设置当前记录创建人ID和修改人ID
+        // TODO 后期需要更改为当前用户登录的ID
+        employee.setCreateUser(10L);
+        employee.setUpdateUser(10L);
+
+        employeeMapper.insert(employee);
     }
 
 }

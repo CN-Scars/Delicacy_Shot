@@ -1,5 +1,6 @@
 package com.scars.service;
 
+import com.scars.dto.EmployeeDTO;
 import com.scars.dto.EmployeeLoginDTO;
 import com.scars.entity.Employee;
 
@@ -12,4 +13,5 @@ public interface EmployeeService {
      */
     Employee login(EmployeeLoginDTO employeeLoginDTO);
 
+    void save(EmployeeDTO employeeDTO);
 }
