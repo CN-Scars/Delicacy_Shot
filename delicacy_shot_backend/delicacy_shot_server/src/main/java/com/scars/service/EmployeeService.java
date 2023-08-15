@@ -2,7 +2,9 @@ package com.scars.service;
 
 import com.scars.dto.EmployeeDTO;
 import com.scars.dto.EmployeeLoginDTO;
+import com.scars.dto.EmployeePageQueryDTO;
 import com.scars.entity.Employee;
+import com.scars.result.PageResult;
 
 public interface EmployeeService {
 
@@ -13,5 +15,16 @@ public interface EmployeeService {
      */
     Employee login(EmployeeLoginDTO employeeLoginDTO);
 
+    /**
+     * 新增员工
+     * @param employeeDTO
+     */
     void save(EmployeeDTO employeeDTO);
+
+    /**
+     * 员工信息分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
+    PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 }

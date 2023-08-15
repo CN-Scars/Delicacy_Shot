@@ -1,5 +1,7 @@
 package com.scars.mapper;
 
+import com.github.pagehelper.Page;
+import com.scars.dto.EmployeePageQueryDTO;
 import com.scars.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,4 +28,11 @@ public interface EmployeeMapper {
             "values " +
             "(#{id}, #{name}, #{username}, #{password}, #{phone}, #{sex}, #{idNumber}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})")
     void insert(Employee employee);
+
+    /**
+     * 员工信息分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
+    Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
 }

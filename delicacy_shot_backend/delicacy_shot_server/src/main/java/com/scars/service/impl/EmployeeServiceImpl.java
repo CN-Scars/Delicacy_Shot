@@ -1,16 +1,20 @@
 package com.scars.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.scars.constant.MessageConstant;
 import com.scars.constant.PasswordConstant;
 import com.scars.constant.StatusConstant;
 import com.scars.context.BaseContext;
 import com.scars.dto.EmployeeDTO;
 import com.scars.dto.EmployeeLoginDTO;
+import com.scars.dto.EmployeePageQueryDTO;
 import com.scars.entity.Employee;
 import com.scars.exception.AccountLockedException;
 import com.scars.exception.AccountNotFoundException;
 import com.scars.exception.PasswordErrorException;
 import com.scars.mapper.EmployeeMapper;
+import com.scars.result.PageResult;
 import com.scars.service.EmployeeService;
 import org.apache.commons.codec.cli.Digest;
 import org.springframework.beans.BeanUtils;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -83,6 +88,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
+    }
+
+    /**
+     * 员工信息分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        long total = page.getTotal();
+        List<Employee> records = page.getResult();
+        return new PageResult(total, records);
     }
 
 }
