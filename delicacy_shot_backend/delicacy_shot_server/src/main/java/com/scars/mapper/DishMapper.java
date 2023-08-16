@@ -1,8 +1,11 @@
 package com.scars.mapper;
 
+import com.github.pagehelper.Page;
 import com.scars.annotation.AutoFill;
+import com.scars.dto.DishPageQueryDTO;
 import com.scars.entity.Dish;
 import com.scars.enumeration.OperationType;
+import com.scars.vo.DishVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -23,4 +26,11 @@ public interface DishMapper {
      */
     @AutoFill(value = OperationType.INSERT)
     void insert(Dish dish);
+
+    /**
+     * 菜品分页查询
+     * @param dishPageQueryDTO
+     * @return
+     */
+    Page<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
 }

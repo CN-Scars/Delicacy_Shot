@@ -1,6 +1,8 @@
 package com.scars.service;
 
 import com.scars.dto.DishDTO;
+import com.scars.dto.DishPageQueryDTO;
+import com.scars.result.PageResult;
 
 public interface DishService {
 
@@ -9,4 +11,11 @@ public interface DishService {
      * @param dishDTO
      */
     void saveWithFlavor(DishDTO dishDTO);
+
+    /**
+     * 菜品分页查询
+     * @param dishPageQueryDTO
+     * @return
+     */
+    PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
 }

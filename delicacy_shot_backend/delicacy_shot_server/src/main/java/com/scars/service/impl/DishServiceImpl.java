@@ -1,11 +1,16 @@
 package com.scars.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.scars.dto.DishDTO;
+import com.scars.dto.DishPageQueryDTO;
 import com.scars.entity.Dish;
 import com.scars.entity.DishFlavor;
 import com.scars.mapper.DishFlavorMapper;
 import com.scars.mapper.DishMapper;
+import com.scars.result.PageResult;
 import com.scars.service.DishService;
+import com.scars.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +47,16 @@ public class DishServiceImpl implements DishService {
             });
             dishFlavorMapper.insertBatch(flavors);
         }
+    }
+
+    /**
+     * 菜品分页查询
+     * @param dishPageQueryDTO
+     * @return
+     */
+    public PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO) {
+        PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
+        Page<DishVO> page = dishMapper.pageQuery(dishPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }
