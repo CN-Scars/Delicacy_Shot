@@ -64,4 +64,12 @@ public class DishController {
         DishVO dishVO =  dishService.getByIdWithFlavor(id);
         return Result.success(dishVO);
     }
+
+    @PutMapping
+    @ApiOperation("修改菜品信息")
+    public Result update(@RequestBody DishDTO dishDTO) {
+        log.info("修改的菜品信息：{}", dishDTO);
+        dishService.updateWithFlavor(dishDTO);
+        return Result.success();
+    }
 }
