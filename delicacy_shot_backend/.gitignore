@@ -4,3 +4,4 @@
 *.class
 *Test.java
 **/test/
+/delicacy_shot_server/src/main/resources/application-dev.yml
