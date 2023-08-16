@@ -3,6 +3,7 @@ package com.scars.service;
 import com.scars.dto.DishDTO;
 import com.scars.dto.DishPageQueryDTO;
 import com.scars.result.PageResult;
+import com.scars.vo.DishVO;
 
 import java.util.List;
 
@@ -26,4 +27,11 @@ public interface DishService {
      * @param ids
      */
     void deleteBatch(List<Long> ids);
+
+    /**
+     * 根据id查询菜品和对应的口味数据
+     * @param id
+     * @return
+     */
+    DishVO getByIdWithFlavor(Long id);
 }

@@ -5,6 +5,7 @@ import com.scars.dto.DishPageQueryDTO;
 import com.scars.result.PageResult;
 import com.scars.result.Result;
 import com.scars.service.DishService;
+import com.scars.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -54,5 +55,13 @@ public class DishController {
         log.info("删除了菜品：{}", ids);
         dishService.deleteBatch(ids);
         return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询菜品")
+    public Result<DishVO> getById(@PathVariable Long id){
+        log.info("查询的菜品id为：{}", id);
+        DishVO dishVO =  dishService.getByIdWithFlavor(id);
+        return Result.success(dishVO);
     }
 }
