@@ -2,12 +2,14 @@ package com.scars.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.scars.annotation.AutoFill;
 import com.scars.constant.MessageConstant;
 import com.scars.constant.StatusConstant;
 import com.scars.context.BaseContext;
 import com.scars.dto.CategoryDTO;
 import com.scars.dto.CategoryPageQueryDTO;
 import com.scars.entity.Category;
+import com.scars.enumeration.OperationType;
 import com.scars.exception.DeletionNotAllowedException;
 import com.scars.mapper.CategoryMapper;
 import com.scars.mapper.DishMapper;
@@ -46,12 +48,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         //分类状态默认为禁用状态0
         category.setStatus(StatusConstant.DISABLE);
-
-        //设置创建时间、修改时间、创建人、修改人
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
 
         categoryMapper.insert(category);
     }
@@ -99,10 +95,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
 
-        //设置修改时间、修改人
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
-
         categoryMapper.update(category);
     }
 
@@ -111,12 +103,10 @@ public class CategoryServiceImpl implements CategoryService {
      * @param status
      * @param id
      */
-    public void startOrStop(Integer status, Long id) {
+    public void enableOrDisable(Integer status, Long id) {
         Category category = Category.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
         categoryMapper.update(category);
     }
