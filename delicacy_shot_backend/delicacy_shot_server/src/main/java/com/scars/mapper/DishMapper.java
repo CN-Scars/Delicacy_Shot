@@ -6,8 +6,12 @@ import com.scars.dto.DishPageQueryDTO;
 import com.scars.entity.Dish;
 import com.scars.enumeration.OperationType;
 import com.scars.vo.DishVO;
+import lombok.Data;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface DishMapper {
@@ -33,4 +37,19 @@ public interface DishMapper {
      * @return
      */
     Page<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 根据主键查询菜品
+     * @param id
+     * @return
+     */
+    @Select("select * from dish where id = #{id}")
+    Dish getById(Long id);
+
+    /**
+     * 根据主键删除菜品
+     * @param ids
+     */
+    @Delete("delete from dish where id = #{id}")
+    void deleteById(Long id);
 }

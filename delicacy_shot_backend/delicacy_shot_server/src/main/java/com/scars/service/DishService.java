@@ -4,6 +4,8 @@ import com.scars.dto.DishDTO;
 import com.scars.dto.DishPageQueryDTO;
 import com.scars.result.PageResult;
 
+import java.util.List;
+
 public interface DishService {
 
     /**
@@ -18,4 +20,10 @@ public interface DishService {
      * @return
      */
     PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
+
+    /**
+     * 删除菜品
+     * @param ids
+     */
+    void deleteBatch(List<Long> ids);
 }
