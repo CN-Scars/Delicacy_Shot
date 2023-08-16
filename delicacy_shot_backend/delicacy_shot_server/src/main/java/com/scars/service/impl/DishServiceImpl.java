@@ -8,10 +8,12 @@ import com.scars.dto.DishDTO;
 import com.scars.dto.DishPageQueryDTO;
 import com.scars.entity.Dish;
 import com.scars.entity.DishFlavor;
+import com.scars.entity.Setmeal;
 import com.scars.exception.DeletionNotAllowedException;
 import com.scars.mapper.DishFlavorMapper;
 import com.scars.mapper.DishMapper;
 import com.scars.mapper.SetmealDishMapper;
+import com.scars.mapper.SetmealMapper;
 import com.scars.result.PageResult;
 import com.scars.service.DishService;
 import com.scars.vo.DishVO;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +35,8 @@ public class DishServiceImpl implements DishService {
     private DishFlavorMapper dishFlavorMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+    @Autowired
+    private SetmealMapper setmealMapper;
 
     /**
      * 新增菜品和对应的口味
@@ -98,6 +103,7 @@ public class DishServiceImpl implements DishService {
 
     /**
      * 根据id查询菜品和对应口味的数据
+     *
      * @param id
      * @return
      */
@@ -114,6 +120,7 @@ public class DishServiceImpl implements DishService {
 
     /**
      * 根据id修改菜品和对应的口味信息
+     *
      * @param dishDTO
      */
     public void updateWithFlavor(DishDTO dishDTO) {
@@ -129,6 +136,37 @@ public class DishServiceImpl implements DishService {
             });
             dishFlavorMapper.insertBatch(flavors);
         }
+    }
 
+    /**
+     * 菜品的起售与停售
+     *
+     * @param status
+     * @param id
+     */
+    @Transactional
+    public void enableOrDisable(Integer status, Long id) {
+        Dish dish = Dish.builder()
+                .status(status)
+                .id(id)
+                .build();
+        dishMapper.update(dish);
+
+        if (status == StatusConstant.DISABLE)   // 在菜品停售的同时把相关联的套餐也一起停售
+        {
+            List<Long> dishIds = new ArrayList<>();
+            dishIds.add(id);
+
+            List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(dishIds);
+            if (setmealIds != null && !setmealIds.isEmpty()) {
+                for (Long setmealId : setmealIds) {
+                    Setmeal setmeal = Setmeal.builder()
+                            .id(setmealId)
+                            .status(StatusConstant.DISABLE)
+                            .build();
+                    setmealMapper.update(setmeal);
+                }
+            }
+        }
     }
 }
