@@ -2,6 +2,7 @@ package com.scars.controller.admin;
 
 import com.scars.dto.DishDTO;
 import com.scars.dto.DishPageQueryDTO;
+import com.scars.entity.Dish;
 import com.scars.result.PageResult;
 import com.scars.result.Result;
 import com.scars.service.DishService;
@@ -9,7 +10,6 @@ import com.scars.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,5 +78,17 @@ public class DishController {
     public Result<String> enableOrDisable(@PathVariable Integer status, Long id) {
         dishService.enableOrDisable(status, id);
         return Result.success();
+    }
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("/list")
+    @ApiOperation("根据分类id查询菜品")
+    public Result<List<Dish>> list(Long categoryId) {
+        List<Dish> dishes = dishService.list(categoryId);
+        return Result.success(dishes);
     }
 }

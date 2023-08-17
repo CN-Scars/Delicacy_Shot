@@ -2,6 +2,7 @@ package com.scars.service;
 
 import com.scars.dto.DishDTO;
 import com.scars.dto.DishPageQueryDTO;
+import com.scars.entity.Dish;
 import com.scars.result.PageResult;
 import com.scars.vo.DishVO;
 
@@ -47,4 +48,11 @@ public interface DishService {
      * @param id
      */
     void enableOrDisable(Integer status, Long id);
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    List<Dish> list(Long categoryId);
 }
