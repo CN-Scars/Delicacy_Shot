@@ -54,7 +54,7 @@ public class DishServiceImpl implements DishService {
         List<DishFlavor> flavors = dishDTO.getFlavors();
         if (flavors != null && !flavors.isEmpty()) {
             flavors.forEach(dishFlavor -> {
-                dishFlavor.setDishId(dishId);
+                dishFlavor.setDishID(dishId);
             });
             dishFlavorMapper.insertBatch(flavors);
         }
@@ -132,7 +132,7 @@ public class DishServiceImpl implements DishService {
         List<DishFlavor> flavors = dishDTO.getFlavors();
         if (flavors != null && !flavors.isEmpty()) {
             flavors.forEach(dishFlavor -> {
-                dishFlavor.setDishId(dishDTO.getId());
+                dishFlavor.setDishID(dishDTO.getId());
             });
             dishFlavorMapper.insertBatch(flavors);
         }
