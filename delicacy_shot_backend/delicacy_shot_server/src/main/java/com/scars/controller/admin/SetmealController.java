@@ -5,6 +5,7 @@ import com.scars.dto.SetmealPageQueryDTO;
 import com.scars.result.PageResult;
 import com.scars.result.Result;
 import com.scars.service.SetmealService;
+import com.scars.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,28 @@ public class SetmealController {
     @ApiOperation("删除套餐")
     public Result delete(@RequestParam List<Long> ids) {
         setmealService.deleteBatch(ids);
+        return Result.success();
+    }
+
+    /**
+     * 根据id查询套餐
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询套餐")
+    public Result<SetmealVO> getById(@PathVariable Long id) {
+        SetmealVO setmealVO = setmealService.getByIdWithDish(id);
+        return Result.success(setmealVO);
+    }
+
+    /**
+     * 修改套餐
+     */
+    @PutMapping
+    @ApiOperation("修改套餐")
+    public Result update(@RequestBody SetmealDTO setmealDTO) {
+        setmealService.update(setmealDTO);
         return Result.success();
     }
 }
