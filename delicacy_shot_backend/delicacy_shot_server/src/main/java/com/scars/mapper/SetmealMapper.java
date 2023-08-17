@@ -1,8 +1,11 @@
 package com.scars.mapper;
 
+import com.github.pagehelper.Page;
 import com.scars.annotation.AutoFill;
+import com.scars.dto.SetmealPageQueryDTO;
 import com.scars.entity.Setmeal;
 import com.scars.enumeration.OperationType;
+import com.scars.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -30,4 +33,11 @@ public interface SetmealMapper {
      */
     @AutoFill(value = OperationType.INSERT)
     void insert(Setmeal setmeal);
+
+    /**
+     * 分页查询
+     * @param setmealPageQueryDTO
+     * @return
+     */
+    Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 }
