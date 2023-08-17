@@ -6,9 +6,11 @@ import com.scars.constant.MessageConstant;
 import com.scars.constant.StatusConstant;
 import com.scars.dto.SetmealDTO;
 import com.scars.dto.SetmealPageQueryDTO;
+import com.scars.entity.Dish;
 import com.scars.entity.Setmeal;
 import com.scars.entity.SetmealDish;
 import com.scars.exception.DeletionNotAllowedException;
+import com.scars.exception.SetmealEnableFailedException;
 import com.scars.mapper.DishMapper;
 import com.scars.mapper.SetmealDishMapper;
 import com.scars.mapper.SetmealMapper;
@@ -133,5 +135,31 @@ public class SetmealServiceImpl implements SetmealService {
             setmealDish.setSetmealId(setmealId);
         });
         setmealDishMapper.insertBatch(setmealDishes);
+    }
+
+
+    /**
+     * 套餐的起售停售
+     *
+     * @param status
+     * @param id
+     */
+    public void enableOrDisable(Integer status, Long id) {
+        if (status == StatusConstant.ENABLE) {
+            List<Dish> dishList = dishMapper.getBySetmealId(id);
+            if (dishList != null && !dishList.isEmpty()) {
+                dishList.forEach(dish -> {
+                    if (dish.getStatus() == StatusConstant.DISABLE) {
+                        throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+                    }
+                });
+            }
+        }
+
+        Setmeal setmeal = Setmeal.builder()
+                .id(id)
+                .status(status)
+                .build();
+        setmealMapper.update(setmeal);
     }
 }
