@@ -4,6 +4,8 @@ import com.scars.dto.SetmealDTO;
 import com.scars.dto.SetmealPageQueryDTO;
 import com.scars.result.PageResult;
 
+import java.util.List;
+
 public interface SetmealService {
 
     /**
@@ -18,4 +20,10 @@ public interface SetmealService {
      * @return
      */
     PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+
+    /**
+     * 删除套餐
+     * @param ids
+     */
+    void deleteBatch(List<Long> ids);
 }

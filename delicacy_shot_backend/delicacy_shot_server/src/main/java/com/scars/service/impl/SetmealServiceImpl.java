@@ -2,10 +2,13 @@ package com.scars.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.scars.constant.MessageConstant;
+import com.scars.constant.StatusConstant;
 import com.scars.dto.SetmealDTO;
 import com.scars.dto.SetmealPageQueryDTO;
 import com.scars.entity.Setmeal;
 import com.scars.entity.SetmealDish;
+import com.scars.exception.DeletionNotAllowedException;
 import com.scars.mapper.DishMapper;
 import com.scars.mapper.SetmealDishMapper;
 import com.scars.mapper.SetmealMapper;
@@ -38,6 +41,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 新增套餐，同时需要保存套餐和菜品的关联关系
+     *
      * @param setmealDTO
      */
     @Transactional
@@ -58,6 +62,7 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 分页查询
+     *
      * @param setmealPageQueryDTO
      * @return
      */
@@ -70,5 +75,25 @@ public class SetmealServiceImpl implements SetmealService {
         Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
 
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 删除套餐
+     *
+     * @param ids
+     */
+    public void deleteBatch(List<Long> ids) {
+        ids.forEach(id -> {
+            Setmeal setmeal = setmealMapper.getById(id);
+
+            if (setmeal.getStatus() == StatusConstant.ENABLE) {
+                throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
+            }
+        });
+
+        ids.forEach(setmealId -> {
+            setmealMapper.deleteById(setmealId);
+            setmealDishMapper.deleteBySetmealId(setmealId);
+        });
     }
 }
