@@ -49,16 +49,34 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * @return
      */
     @Bean
-    public Docket docket() {
+    public Docket adminDocket() {
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("吃得饱美味项目接口文档")
                 .version("1.0")
                 .description("吃得饱美味项目接口文档")
                 .build();
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("管理端接口")
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.scars.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.scars.controller.admin"))
+                .paths(PathSelectors.any())
+                .build();
+        return docket;
+    }
+
+    @Bean
+    public Docket userDocket() {
+        ApiInfo apiInfo = new ApiInfoBuilder()
+                .title("吃得饱美味项目接口文档")
+                .version("1.0")
+                .description("吃得饱美味项目接口文档")
+                .build();
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .groupName("用户端接口")
+                .apiInfo(apiInfo)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.scars.controller.user"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;
