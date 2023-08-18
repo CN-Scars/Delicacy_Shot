@@ -50,9 +50,9 @@ public interface DishService {
     void enableOrDisable(Integer status, Long id);
 
     /**
-     * 根据分类id查询菜品
-     * @param categoryId
+     * 动态条件查询菜品
+     * @param dishDTO
      * @return
      */
-    List<Dish> list(Long categoryId);
+    List<Dish> list(DishDTO dishDTO);
 }

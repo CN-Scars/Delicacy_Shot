@@ -81,14 +81,14 @@ public class DishController {
     }
 
     /**
-     * 根据分类id查询菜品
-     * @param categoryId
+     * 动态条件查询菜品
+     * @param dishDTO
      * @return
      */
     @GetMapping("/list")
-    @ApiOperation("根据分类id查询菜品")
-    public Result<List<Dish>> list(Long categoryId) {
-        List<Dish> dishes = dishService.list(categoryId);
+    @ApiOperation("动态条件查询菜品")
+    public Result<List<Dish>> list(DishDTO dishDTO) {
+        List<Dish> dishes = dishService.list(dishDTO);
         return Result.success(dishes);
     }
 }
