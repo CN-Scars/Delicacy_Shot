@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "Delicacy Shot",
+  "usingComponents": {
+    "nav-bar": "/pages/common/Navbar/navbar",
+    "phone": "/components/uni-phone/index"
+  }
+}

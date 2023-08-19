@@ -37,13 +37,19 @@ logging:
 scars:
   jwt:
     # 设置jwt签名加密时使用的秘钥
-    admin-secret-key: itcast
+    admin-secret-key: scars
     # 设置jwt过期时间
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    user-secret-key: scars
+    user-ttl: 720000
+    user-token-name: authentication
   alioss:
     endpoint: ${scars.alioss.endpoint}
     access-key-id: ${scars.alioss.access-key-id}
     access-key-secret: ${scars.alioss.access-key-secret}
     bucket-name: ${scars.alioss.bucket-name}
+  wechat:
+    appid: ${scars.wechat.appid}
+    secret: ${scars.wechat.secret}
