@@ -2,7 +2,9 @@ package com.scars.service;
 
 import com.scars.dto.SetmealDTO;
 import com.scars.dto.SetmealPageQueryDTO;
+import com.scars.entity.Setmeal;
 import com.scars.result.PageResult;
+import com.scars.vo.DishItemVO;
 import com.scars.vo.SetmealVO;
 
 import java.util.List;
@@ -47,4 +49,18 @@ public interface SetmealService {
      * @param id
      */
     void enableOrDisable(Integer status, Long id);
+
+    /**
+     * 条件查询
+     * @param setmeal
+     * @return
+     */
+    List<Setmeal> list(Setmeal setmeal);
+
+    /**
+     * 根据id查询菜品选项
+     * @param id
+     * @return
+     */
+    List<DishItemVO> getDishItemById(Long id);
 }
