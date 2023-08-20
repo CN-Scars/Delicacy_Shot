@@ -19,8 +19,10 @@ import java.util.List;
 public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
+
     /**
      * 添加购物车数据
+     *
      * @param shoppingCartDTO
      * @return
      */
@@ -34,6 +36,7 @@ public class ShoppingCartController {
 
     /**
      * 查看购物车
+     *
      * @return
      */
     @GetMapping("/list")
@@ -41,5 +44,17 @@ public class ShoppingCartController {
     public Result<List<ShoppingCart>> list() {
         List<ShoppingCart> list = shoppingCartService.showShoppingCart();
         return Result.success(list);
+    }
+
+    /**
+     * 清空购物车
+     *
+     * @return
+     */
+    @DeleteMapping("/clean")
+    @ApiOperation("清空购物车")
+    public Result clean() {
+        shoppingCartService.cleanShoppingCart();
+        return Result.success();
     }
 }
