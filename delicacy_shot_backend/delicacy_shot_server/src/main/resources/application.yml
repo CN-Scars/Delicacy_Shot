@@ -53,3 +53,10 @@ scars:
   wechat:
     appid: ${scars.wechat.appid}
     secret: ${scars.wechat.secret}
+    mchid: ${scars.wechat.mchid}
+    mch-serial-no: ${scars.wechat.mch-serial-no}
+    private-key-file-path: ${scars.wechat.private-key-file-path}
+    api-v3-key: ${scars.wechat.api-v3-key}
+    we-chat-pay-cert-file-path: ${scars.wechat.we-chat-pay-cert-file-path}
+    notify-url: ${scars.wechat.notify-url}
+    refund-notify-url: ${scars.wechat.refund-notify-url}
