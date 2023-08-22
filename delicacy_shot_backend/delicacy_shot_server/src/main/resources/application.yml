@@ -60,3 +60,7 @@ scars:
     we-chat-pay-cert-file-path: ${scars.wechat.we-chat-pay-cert-file-path}
     notify-url: ${scars.wechat.notify-url}
     refund-notify-url: ${scars.wechat.refund-notify-url}
+  shop:
+    address: ${scars.shop.address}
+  baidu:
+    ak: ${scars.baidu.ak}
