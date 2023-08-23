@@ -74,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 检查用户的收货地址是否超出配送范围
-        checkOutOfRange(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());
+//        checkOutOfRange(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());
 
         Long userId = BaseContext.getCurrentId();
         ShoppingCart shoppingCart = new ShoppingCart();
@@ -172,9 +172,7 @@ public class OrderServiceImpl implements OrderService {
         map.put("type", 1); // 1表示来单提醒，2表示客户催单
         map.put("orderId", ordersDB.getId());
         map.put("contant", "订单号：" + outTradeNo);
-
-        String jsonString = JSON.toJSONString(map);
-        webSocketServer.sendToAllClient(jsonString);
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 
     /**
@@ -442,6 +440,7 @@ public class OrderServiceImpl implements OrderService {
      * @param id
      */
     public void complete(Long id) {
+        // 查询订单并判断是否存在且状态为正在派送中
         Orders ordersDB = orderMapper.getById(id);
 
         if (ordersDB == null || !ordersDB.getStatus().equals(Orders.DELIVERY_IN_PROGRESS)) {
@@ -455,6 +454,25 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderMapper.update(orders);
+    }
+
+    /**
+     * 用户催单
+     * @param id
+     */
+    public void reminder(Long id) {
+        // 查询订单并判断是否存在
+        Orders ordersDB = orderMapper.getById(id);
+
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        Map map = new HashMap<>();
+        map.put("type", 2); // 1表示来单提醒，2表示客户催单
+        map.put("orderId", id);
+        map.put("contant", "订单号：" + ordersDB.getNumber());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 
     /**
