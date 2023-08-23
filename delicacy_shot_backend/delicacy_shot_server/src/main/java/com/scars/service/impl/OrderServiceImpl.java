@@ -21,12 +21,12 @@ import com.scars.vo.OrderPaymentVO;
 import com.scars.vo.OrderStatisticsVO;
 import com.scars.vo.OrderSubmitVO;
 import com.scars.vo.OrderVO;
+import com.scars.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -48,6 +48,8 @@ public class OrderServiceImpl implements OrderService {
     private ShoppingCartMapper shoppingCartMapper;
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @org.springframework.beans.factory.annotation.Value("${scars.shop.address}")
     private String shopAddress;
@@ -164,6 +166,15 @@ public class OrderServiceImpl implements OrderService {
 
         // 清空购物车
         shoppingCartMapper.deleteByUserId(BaseContext.getCurrentId());
+
+        // 通过websocket向客户端浏览器推送消息
+        Map map = new HashMap<>();
+        map.put("type", 1); // 1表示来单提醒，2表示客户催单
+        map.put("orderId", ordersDB.getId());
+        map.put("contant", "订单号：" + outTradeNo);
+
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
     }
 
     /**
