@@ -21,37 +21,37 @@
 #         provinceCode=35, provinceName=福建省, cityCode=3501, cityName=福州市, districtCode=350103, districtName=台江区
         update address_book
         <set>
-            <if test="consignee != null">
+            <if test="consignee != null and consignee != ''">
                 consignee = #{consignee},
             </if>
-            <if test="sex != null">
+            <if test="sex != null and sex != ''">
                 sex = #{sex},
             </if>
-            <if test="phone != null">
+            <if test="phone != null and phone != ''">
                 phone = #{phone},
             </if>
-            <if test="provinceCode != null">
+            <if test="provinceCode != null and provinceCode != ''">
                 province_code = #{provinceCode},
             </if>
-            <if test="provinceName != null">
+            <if test="provinceName != null and provinceName != ''">
                 province_name = #{provinceName},
             </if>
-            <if test="cityCode != null">
+            <if test="cityCode != null and cityCode != ''">
                 city_code = #{cityCode},
             </if>
-            <if test="cityName != null">
+            <if test="cityName != null and cityName != ''">
                 city_name = #{cityName},
             </if>
-            <if test="districtCode != null">
+            <if test="districtCode != null and districtCode != ''">
                 district_code = #{districtCode},
             </if>
-            <if test="districtName != null">
+            <if test="districtName != null and districtName != ''">
                 district_name = #{districtName},
             </if>
-            <if test="detail != null">
+            <if test="detail != null and detail != ''">
                 detail = #{detail},
             </if>
-            <if test="label != null">
+            <if test="label != null and label != ''">
                 label = #{label},
             </if>
             <if test="isDefault != null">
