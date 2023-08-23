@@ -394,7 +394,7 @@ public class OrderServiceImpl implements OrderService {
 
         //支付状态
         Integer payStatus = ordersDB.getPayStatus();
-        if (payStatus == 1) {
+        if (Objects.equals(payStatus, Orders.PAID)) {
             //用户已支付，需要退款
             String refund = weChatPayUtil.refund(
                     ordersDB.getNumber(),
