@@ -339,7 +339,7 @@ public class OrderServiceImpl implements OrderService {
     public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
         Orders orders = Orders.builder()
                 .id(ordersConfirmDTO.getId())
-                .status(ordersConfirmDTO.getStatus())
+                .status(Orders.CONFIRMED)
                 .build();
 
         orderMapper.update(orders);
@@ -356,7 +356,7 @@ public class OrderServiceImpl implements OrderService {
         Orders ordersDB = orderMapper.getById(ordersRejectionDTO.getId());
 
         // 订单只有存在且状态为"待接单"才可以拒单
-        if (ordersDB == null || ordersDB.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
+        if (ordersDB == null || !ordersDB.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
 
@@ -369,7 +369,7 @@ public class OrderServiceImpl implements OrderService {
                     ordersDB.getNumber(),
                     new BigDecimal(0.01),
                     new BigDecimal(0.01));
-            log.info("申请退款：{}", refund);
+            log.info("申请退款，金额为：{}元", refund);
         }
 
         // 拒单需要退款，根据订单id更新订单状态、拒单原因、取消时间
@@ -401,7 +401,7 @@ public class OrderServiceImpl implements OrderService {
                     ordersDB.getNumber(),
                     new BigDecimal(0.01),
                     new BigDecimal(0.01));
-            log.info("申请退款：{}", refund);
+            log.info("申请退款，金额为：{}元", refund);
         }
 
         // 管理端取消订单需要退款，根据订单id更新订单状态、取消原因、取消时间
