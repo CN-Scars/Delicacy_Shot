@@ -18,6 +18,7 @@
     </select>
 
     <update id="update" parameterType="addressBook">
+#         provinceCode=35, provinceName=福建省, cityCode=3501, cityName=福州市, districtCode=350103, districtName=台江区
         update address_book
         <set>
             <if test="consignee != null">
@@ -28,6 +29,24 @@
             </if>
             <if test="phone != null">
                 phone = #{phone},
+            </if>
+            <if test="provinceCode != null">
+                province_code = #{provinceCode},
+            </if>
+            <if test="provinceName != null">
+                province_name = #{provinceName},
+            </if>
+            <if test="cityCode != null">
+                city_code = #{cityCode},
+            </if>
+            <if test="cityName != null">
+                city_name = #{cityName},
+            </if>
+            <if test="districtCode != null">
+                district_code = #{districtCode},
+            </if>
+            <if test="districtName != null">
+                district_name = #{districtName},
             </if>
             <if test="detail != null">
                 detail = #{detail},
