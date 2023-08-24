@@ -1,6 +1,7 @@
 package com.scars.service;
 
 import com.scars.vo.OrderReportVO;
+import com.scars.vo.SalesTop10ReportVO;
 import com.scars.vo.TurnoverReportVO;
 import com.scars.vo.UserReportVO;
 
@@ -30,4 +31,12 @@ public interface ReportService {
      * @return
      */
     OrderReportVO getOrderStatistics(LocalDate begin, LocalDate end);
+
+    /**
+     * 统计指定时间区间内的销量排名前十的商品
+     * @param begin
+     * @param end
+     * @return
+     */
+    SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end);
 }

@@ -1,11 +1,13 @@
 package com.scars.mapper;
 
 import com.github.pagehelper.Page;
+import com.scars.dto.GoodsSalesDTO;
 import com.scars.dto.OrdersPageQueryDTO;
 import com.scars.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -83,4 +85,12 @@ public interface OrderMapper {
      * @return
      */
     Integer countByMap(Map map);
+
+    /**
+     * 统计指定时间区间内销量前十的商品
+     * @param begin
+     * @param end
+     * @return
+     */
+    List<GoodsSalesDTO> getSalesTop10(LocalDateTime begin, LocalDateTime end);
 }

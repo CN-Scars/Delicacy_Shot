@@ -3,6 +3,7 @@ package com.scars.controller.admin;
 import com.scars.result.Result;
 import com.scars.service.ReportService;
 import com.scars.vo.OrderReportVO;
+import com.scars.vo.SalesTop10ReportVO;
 import com.scars.vo.TurnoverReportVO;
 import com.scars.vo.UserReportVO;
 import io.swagger.annotations.Api;
@@ -58,5 +59,17 @@ public class ReportController {
     @ApiOperation("订单统计")
     public Result<OrderReportVO> ordersStatistics(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         return Result.success(reportService.getOrderStatistics(begin, end));
+    }
+
+    /**
+     * 统计指定时间区间内的销量排名前十的商品
+     * @param begin
+     * @param end
+     * @return
+     */
+    @GetMapping("/top10")
+    @ApiOperation("销量排名Top10")
+    public Result<SalesTop10ReportVO> top10(@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
+        return Result.success(reportService.getSalesTop10(begin, end));
     }
 }
