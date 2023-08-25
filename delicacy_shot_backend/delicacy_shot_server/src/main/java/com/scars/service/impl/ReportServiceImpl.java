@@ -5,16 +5,20 @@ import com.scars.entity.Orders;
 import com.scars.mapper.OrderMapper;
 import com.scars.mapper.UserMapper;
 import com.scars.service.ReportService;
-import com.scars.vo.OrderReportVO;
-import com.scars.vo.SalesTop10ReportVO;
-import com.scars.vo.TurnoverReportVO;
-import com.scars.vo.UserReportVO;
-import io.swagger.models.auth.In;
+import com.scars.service.WorkspaceService;
+import com.scars.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,9 +35,12 @@ public class ReportServiceImpl implements ReportService {
     private OrderMapper orderMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WorkspaceService workspaceService;
 
     /**
      * 营业额统计
+     *
      * @param begin
      * @param end
      * @return
@@ -66,6 +73,7 @@ public class ReportServiceImpl implements ReportService {
 
     /**
      * 统计用户数量
+     *
      * @param begin
      * @param end
      * @return
@@ -100,6 +108,7 @@ public class ReportServiceImpl implements ReportService {
 
     /**
      * 订单统计
+     *
      * @param begin
      * @param end
      * @return
@@ -134,7 +143,7 @@ public class ReportServiceImpl implements ReportService {
         Integer validOrderCount = validOrderCountList.stream().reduce(Integer::sum).get();
 
         // 计算订单完成率
-        Double orderCompletionRate = totalOrderCount == 0 ? 0.0 :  validOrderCount.doubleValue() / totalOrderCount.doubleValue();
+        Double orderCompletionRate = totalOrderCount == 0 ? 0.0 : validOrderCount.doubleValue() / totalOrderCount.doubleValue();
 
         return OrderReportVO.builder()
                 .dateList(StringUtils.join(dateList, ","))
@@ -148,6 +157,7 @@ public class ReportServiceImpl implements ReportService {
 
     /**
      * 销量排名Top10
+     *
      * @param begin
      * @param end
      * @return
@@ -169,7 +179,62 @@ public class ReportServiceImpl implements ReportService {
     }
 
     /**
+     * 导出运营数据报表
+     *
+     * @param response
+     */
+    public void exportBusinessData(HttpServletResponse response) {
+        // 查询最近30天的运营数据
+        LocalDate dateBegin = LocalDate.now().minusDays(30);
+        LocalDate dateEnd = LocalDate.now().minusDays(1);
+        BusinessDataVO businessDataVO = workspaceService.getBusinessData(LocalDateTime.of(dateBegin, LocalTime.MIN), LocalDateTime.of(dateEnd, LocalTime.MAX));
+
+        // 将数据写入Excel文件中
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("form-template/Operational Data Report Template.xlsx");
+        try {
+            XSSFWorkbook excel = new XSSFWorkbook(inputStream);
+            XSSFSheet sheet = excel.getSheetAt(0);
+
+            // 填充数据的时间区间数据
+            sheet.getRow(1).getCell(1).setCellValue("时间：" + dateBegin + "至" + dateEnd);
+            XSSFRow row = sheet.getRow(3);
+            // 填充概览数据
+            row.getCell(2).setCellValue(businessDataVO.getTurnover());  // 营业额
+            row.getCell(4).setCellValue(businessDataVO.getOrderCompletionRate());   // 订单完成率
+            row.getCell(6).setCellValue(businessDataVO.getNewUsers());  // 新用户数量
+            row = sheet.getRow(4);
+            row.getCell(2).setCellValue(businessDataVO.getValidOrderCount());   // 有效订单数
+            row.getCell(4).setCellValue(businessDataVO.getUnitPrice()); // 平均客单价
+            // 填充明细数据
+            for (int i = 0; i < 30; ++i) {
+                LocalDate date = dateBegin.plusDays(i);
+
+                // 查询当天的明细数据
+                BusinessDataVO businessData = workspaceService.getBusinessData(LocalDateTime.of(date, LocalTime.MIN), LocalDateTime.of(date, LocalTime.MAX));
+                row = sheet.getRow(7 + i);
+                row.getCell(1).setCellValue(date.toString());
+                row.getCell(2).setCellValue(businessData.getTurnover());
+                row.getCell(3).setCellValue(businessData.getValidOrderCount());
+                row.getCell(4).setCellValue(businessData.getOrderCompletionRate());
+                row.getCell(5).setCellValue(businessData.getUnitPrice());
+                row.getCell(6).setCellValue(businessData.getNewUsers());
+            }
+
+            // 把文件下载到客户端浏览器
+            ServletOutputStream ServletOutputStream = response.getOutputStream();
+            excel.write(ServletOutputStream);
+
+            // 关闭资源
+            ServletOutputStream.close();
+            excel.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * 根据条件统计订单数量
+     *
      * @param begin
      * @param end
      * @param status
